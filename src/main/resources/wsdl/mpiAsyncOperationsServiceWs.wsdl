@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:types="http://ffoms.ru/types/mpiAsyncOperationsSchema" xmlns:tns="http://ffoms.ru/services/mpiAsyncOperationsService" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="TFOMS_mpiAsyncService" targetNamespace="http://ffoms.ru/services/mpiAsyncOperationsService">
+
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://ffoms.ru/types/mpiAsyncOperationsSchema" schemaLocation="../xsd/mpiAsyncOperationsSchema.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="getAllCurrentEnpStartRequest">
+        <wsdl:part element="types:getAllCurrentEnpStartRequest" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getAllCurrentEnpStartResponse">
+        <wsdl:part element="types:getAllCurrentEnpStartResponse" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getAllCurrentEnpPollRequest">
+        <wsdl:part element="types:getAllCurrentEnpPollRequest" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getAllCurrentEnpPollResponse">
+        <wsdl:part element="types:getAllCurrentEnpPollResponse" name="payload"/>
+    </wsdl:message>
+
+    <wsdl:message name="getInsuranceStatusChangesStartRequest">
+        <wsdl:part element="types:getInsuranceStatusChangesStartRequest" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getInsuranceStatusChangesStartResponse">
+        <wsdl:part element="types:getInsuranceStatusChangesStartResponse" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getInsuranceStatusChangesPollRequest">
+        <wsdl:part element="types:getInsuranceStatusChangesPollRequest" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getInsuranceStatusChangesPollResponse">
+        <wsdl:part element="types:getInsuranceStatusChangesPollResponse" name="payload"/>
+    </wsdl:message>
+
+    <wsdl:message name="getViewDataAttachStartRequest">
+        <wsdl:part element="types:getViewDataAttachStartRequest" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getViewDataAttachStartResponse">
+        <wsdl:part element="types:getViewDataAttachStartResponse" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getViewDataAttachPollRequest">
+        <wsdl:part element="types:getViewDataAttachPollRequest" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getViewDataAttachPollResponse">
+        <wsdl:part element="types:getViewDataAttachPollResponse" name="payload"/>
+    </wsdl:message>
+
+    <wsdl:message name="getViewDataInsuranceStartRequest">
+        <wsdl:part element="types:getViewDataInsuranceStartRequest" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getViewDataInsuranceStartResponse">
+        <wsdl:part element="types:getViewDataInsuranceStartResponse" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getViewDataInsurancePollRequest">
+        <wsdl:part element="types:getViewDataInsurancePollRequest" name="payload"/>
+    </wsdl:message>
+    <wsdl:message name="getViewDataInsurancePollResponse">
+        <wsdl:part element="types:getViewDataInsurancePollResponse" name="payload"/>
+    </wsdl:message>
+<!--    <wsdl:message name="changeAllPoliciesInsuranceToTfomsStartRequest">-->
+<!--        <wsdl:part name="payload" element="types:changeAllPoliciesInsuranceToTfomsStartRequest"/>-->
+<!--    </wsdl:message>-->
+<!--    <wsdl:message name="changeAllPoliciesInsuranceToTfomsStartResponse">-->
+<!--        <wsdl:part name="payload" element="types:changeAllPoliciesInsuranceToTfomsStartResponse"/>-->
+<!--    </wsdl:message>-->
+<!--    <wsdl:message name="changeAllPoliciesInsuranceToTfomsPollRequest">-->
+<!--        <wsdl:part name="payload" element="types:changeAllPoliciesInsuranceToTfomsPollRequest"/>-->
+<!--    </wsdl:message>-->
+<!--    <wsdl:message name="changeAllPoliciesInsuranceToTfomsPollResponse">-->
+<!--        <wsdl:part name="payload" element="types:changeAllPoliciesInsuranceToTfomsPollResponse"/>-->
+<!--    </wsdl:message>-->
+
+    <wsdl:portType name="TFOMS_PortType">
+        <wsdl:operation name="getAllCurrentEnpStart">
+            <wsdl:input message="tns:getAllCurrentEnpStartRequest"/>
+            <wsdl:output message="tns:getAllCurrentEnpStartResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getAllCurrentEnpPoll">
+            <wsdl:input message="tns:getAllCurrentEnpPollRequest"/>
+            <wsdl:output message="tns:getAllCurrentEnpPollResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="getInsuranceStatusChangesStart">
+            <wsdl:input message="tns:getInsuranceStatusChangesStartRequest"/>
+            <wsdl:output message="tns:getInsuranceStatusChangesStartResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getInsuranceStatusChangesPoll">
+            <wsdl:input message="tns:getInsuranceStatusChangesPollRequest"/>
+            <wsdl:output message="tns:getInsuranceStatusChangesPollResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="getViewDataAttachStart">
+            <wsdl:input message="tns:getViewDataAttachStartRequest"/>
+            <wsdl:output message="tns:getViewDataAttachStartResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getViewDataAttachPoll">
+            <wsdl:input message="tns:getViewDataAttachPollRequest"/>
+            <wsdl:output message="tns:getViewDataAttachPollResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="getViewDataInsuranceStart">
+            <wsdl:input message="tns:getViewDataInsuranceStartRequest"/>
+            <wsdl:output message="tns:getViewDataInsuranceStartResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getViewDataInsurancePoll">
+            <wsdl:input message="tns:getViewDataInsurancePollRequest"/>
+            <wsdl:output message="tns:getViewDataInsurancePollResponse"/>
+        </wsdl:operation>
+
+<!--        <wsdl:operation name="changeAllPoliciesInsuranceToTfomsStart">-->
+<!--            <wsdl:input message="tns:changeAllPoliciesInsuranceToTfomsStartRequest"/>-->
+<!--            <wsdl:output message="tns:changeAllPoliciesInsuranceToTfomsStartResponse"/>-->
+<!--        </wsdl:operation>-->
+<!--        <wsdl:operation name="changeAllPoliciesInsuranceToTfomsPoll">-->
+<!--            <wsdl:input message="tns:changeAllPoliciesInsuranceToTfomsPollRequest"/>-->
+<!--            <wsdl:output message="tns:changeAllPoliciesInsuranceToTfomsPollResponse"/>-->
+<!--        </wsdl:operation>-->
+    </wsdl:portType>
+
+    <wsdl:binding name="TFOMS_SoapBinding" type="tns:TFOMS_PortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getAllCurrentEnpStart">
+            <soap:operation soapAction="http://ffoms.ru/services/tfoms/getAllCurrentEnpStart"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllCurrentEnpPoll">
+            <soap:operation soapAction="http://ffoms.ru/services/tfoms/getAllCurrentEnpPoll"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getInsuranceStatusChangesStart">
+            <soap:operation soapAction="http://ffoms.ru/services/tfoms/getInsuranceStatusChangesStart"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getInsuranceStatusChangesPoll">
+            <soap:operation soapAction="http://ffoms.ru/services/tfoms/getInsuranceStatusChangesPoll"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getViewDataAttachStart">
+            <soap:operation soapAction="http://ffoms.ru/services/tfoms/getViewDataAttachStart"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getViewDataAttachPoll">
+            <soap:operation soapAction="http://ffoms.ru/services/tfoms/getViewDataAttachPoll"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getViewDataInsuranceStart">
+            <soap:operation soapAction="http://ffoms.ru/services/tfoms/getViewDataInsuranceStart"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getViewDataInsurancePoll">
+            <soap:operation soapAction="http://ffoms.ru/services/tfoms/getViewDataInsurancePoll"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+<!--        </wsdl:operation>-->
+<!--        <wsdl:operation name="changeAllPoliciesInsuranceToTfomsStart">-->
+<!--            <soap:operation soapAction="http://ffoms.ru/services/tfoms/changeAllPoliciesInsuranceToTfomsStart"/>-->
+<!--            <wsdl:input>-->
+<!--                <soap:body use="literal"/>-->
+<!--            </wsdl:input>-->
+<!--            <wsdl:output>-->
+<!--                <soap:body use="literal"/>-->
+<!--            </wsdl:output>-->
+<!--        </wsdl:operation>-->
+<!--        <wsdl:operation name="changeAllPoliciesInsuranceToTfomsPoll">-->
+<!--            <soap:operation soapAction="http://ffoms.ru/services/tfoms/changeAllPoliciesInsuranceToTfomsStart"/>-->
+<!--            <wsdl:input>-->
+<!--                <soap:body use="literal"/>-->
+<!--            </wsdl:input>-->
+<!--            <wsdl:output>-->
+<!--                <soap:body use="literal"/>-->
+<!--            </wsdl:output>-->
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="TFOMS_Service">
+        <wsdl:documentation>TFOMS Service</wsdl:documentation>
+        <wsdl:port binding="tns:TFOMS_SoapBinding" name="TFOMS_Port">
+            <soap:address location="http://erzl-hotfix2:80/api/t-foms/integration/ws/wsdl/mpiAsyncOperationsServiceWs"/>
+        </wsdl:port>
+    </wsdl:service>
+
+
+</wsdl:definitions>

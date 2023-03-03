@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:commonTypes="http://ffoms.ru/types/commonTypes" xmlns:tns="http://ffoms.ru/types/mpiAsyncOperationsSchema" elementFormDefault="qualified" targetNamespace="http://ffoms.ru/types/mpiAsyncOperationsSchema" version="1.0">
+    <import namespace="http://ffoms.ru/types/commonTypes" schemaLocation="commonTypes.xsd"/>
+
+    <!-- метод getAllCurrentEnp-->
+
+    <element name="getAllCurrentEnpStartRequest">
+        <annotation>
+            <documentation>Запрос на получение перечень актуальных ЕНП, ЕРН, СНИЛС  ЗЛ, зарегистрированных на заданной территории
+            </documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:CommonRequestType">
+                    <sequence>
+                        <element name="terr" type="commonTypes:OkatoType"/>
+                        <element minOccurs="0" name="dt" type="date">
+                            <annotation>
+                                <documentation>Дата, на которую надо выдавать состояние, если не указана, то на сейчас</documentation>
+                            </annotation>
+                        </element>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getAllCurrentEnpStartResponse">
+        <annotation>
+            <documentation>Синхронный ответ, на запрос на получение перечень актуальных ЕНП, ЕРН, СНИЛС  ЗЛ,
+                зарегистрированных на заданной территории
+            </documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncStartResponse"/>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getAllCurrentEnpPollRequest">
+        <annotation>
+            <documentation>Запрос на получение перечень актуальных ЕНП, ЕРН, СНИЛС  ЗЛ, зарегистрированных на заданной территории
+            </documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncPollRequest"/>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getAllCurrentEnpPollResponse">
+        <annotation>
+            <documentation>Синхронный ответ, на запрос на получение перечень актуальных ЕНП, ЕРН, СНИЛС ЗЛ,
+                зарегистрированных на заданной территории
+            </documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncPollResponse">
+                    <sequence>
+                        <element minOccurs="0" name="content" type="base64Binary" xmime:expectedContentTypes="application/zip"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <!-- метод getInsuranceStatusChanges-->
+
+    <element name="getInsuranceStatusChangesStartRequest">
+        <annotation>
+            <documentation>Запрос на получение список изменений в реестре, касающихся запрошенных территории и/или СМО
+            </documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:CommonRequestType">
+                    <sequence>
+                        <element name="dtFrom" type="date">
+                            <annotation>
+                                <documentation>Начало периода, за который выдаются изменения</documentation>
+                            </annotation>
+                        </element>
+                        <element name="dtTo" type="date">
+                            <annotation>
+                                <documentation>Конец периода, за который выдаются изменения</documentation>
+                            </annotation>
+                        </element>
+                        <element name="terr" type="commonTypes:OkatoType"/>
+                        <element minOccurs="0" name="smo" type="string">
+                            <annotation>
+                                <documentation>ОГРН СМО - обязательный для СМО (причем обязан совпадать с ОГРН запросившей СМО),
+                                    необязательный для ФФОМС/ТФОМС
+                                </documentation>
+                            </annotation>
+                        </element>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getInsuranceStatusChangesStartResponse">
+        <annotation>
+            <documentation>Синхронный ответ, на запрос на получение список изменений в реестре,
+                касающихся запрошенных территории и/или СМО
+            </documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncStartResponse"/>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getInsuranceStatusChangesPollRequest">
+        <annotation>
+            <documentation>Запрос на получение список изменений в реестре, касающихся запрошенных территории и/или СМО
+            </documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncPollRequest">
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getInsuranceStatusChangesPollResponse">
+        <annotation>
+            <documentation>Синхронный ответ, на запрос на получение перечень актуальных ЕНП, ЕРН, СНИЛС  ЗЛ,
+                зарегистрированных на заданной территории
+            </documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncPollResponse">
+                    <sequence>
+                        <element minOccurs="0" name="enpArrived" type="commonTypes:StringListType">
+                            <annotation>
+                                <documentation>Поставленный на учет - ЕНП поставленных на учет (восстановленных) на территории за период</documentation>
+                            </annotation>
+                        </element>
+                        <element minOccurs="0" name="enpDeparted" type="commonTypes:StringListType">
+                            <annotation>
+                                <documentation>Выбыл - ЕНП снятых с учета (приостановленных) на территории за период</documentation>
+                            </annotation>
+                        </element>
+                        <element minOccurs="0" name="enpChanged" type="commonTypes:StringListType">
+                            <annotation>
+                                <documentation>Изменены параметры учета -  ЕНП изменивших состояние без смены территории за период</documentation>
+                            </annotation>
+                        </element>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <!-- метод getViewDataAttach -->
+
+    <element name="getViewDataAttachStartRequest">
+        <annotation>
+            <documentation>Запрашивает данные по прикреплениям ЗЛ к юридическим лицам МО, филиалам МО на 1 число месяца</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:CommonRequestType">
+                    <sequence>
+                        <element name="dt" type="date">
+                            <annotation>
+                                <documentation>Первое число месяца, на которое должна быть получена информация из витрины</documentation>
+                            </annotation>
+                        </element>
+                        <element maxOccurs="unbounded" name="criteria" type="tns:Criteria"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getViewDataAttachStartResponse">
+        <annotation>
+            <documentation>Синхронный ответ, на запрос данных по прикреплениям ЗЛ к юридическим лицам МО, филиалам МО на 1 число месяца
+            </documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncStartResponse"/>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getViewDataAttachPollRequest">
+        <annotation>
+            <documentation>Выдает данные по прикреплениям ЗЛ, исходя из данных параметров, на 1 число месяца</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncPollRequest"/>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getViewDataAttachPollResponse">
+        <annotation>
+            <documentation>Синхронный ответ, на запрос данных по прикреплениям ЗЛ, исходя из данных параметров, на 1 число месяца</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncPollResponse">
+                    <sequence>
+                        <element minOccurs="0" name="content" type="base64Binary" xmime:expectedContentTypes="application/zip"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <!-- метод getViewDataInsurance -->
+
+    <element name="getViewDataInsuranceStartRequest">
+        <annotation>
+            <documentation>Запрашивает сведения о застрахованных лицах на 1-е число месяца</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:CommonRequestType">
+                    <sequence>
+                        <element name="dt" type="date">
+                            <annotation>
+                                <documentation>Первое число месяца, на которое должна быть получена информация из витрины (дата должна совпадать с датой, на которую сформирована витрина)</documentation>
+                            </annotation>
+                        </element>
+                        <element minOccurs="0" name="terr" type="string">
+                            <annotation>
+                                <documentation>ОКАТО территории, на которой работает ТФОМС</documentation>
+                            </annotation>
+                        </element>
+                        <element minOccurs="0" name="smo" type="string">
+                            <annotation>
+                                <documentation>Код СМО</documentation>
+                            </annotation>
+                        </element>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getViewDataInsuranceStartResponse">
+        <annotation>
+            <documentation>Синхронный ответ, на запрос сведений о застрахованных лицах на 1-е число месяца
+            </documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncStartResponse"/>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getViewDataInsurancePollRequest">
+        <annotation>
+            <documentation>Выдает данные по застрахованным лицам, исходя из заданных параметров, на 1-е число месяца</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncPollRequest"/>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="getViewDataInsurancePollResponse">
+        <annotation>
+            <documentation>Синхронный ответ, на запрос данных по застрахованным лицам, исходя из заданных параметров, на 1-е число месяца</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncPollResponse">
+                    <sequence>
+                        <element minOccurs="0" name="content" type="base64Binary" xmime:expectedContentTypes="application/zip"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="changeAllPoliciesInsuranceToTfomsStartRequest">
+        <annotation>
+            <documentation>Запускает процесс назначения действующим полисам, привязанным на заданной территории к заданной СМО, ТФОМС данной территории в качестве СМО</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:CommonRequestType">
+                    <sequence>
+                        <element name="dt" type="date">
+                            <annotation>
+                                <documentation>Дата начала действия полисов</documentation>
+                            </annotation>
+                        </element>
+                        <element name="insurfCode" type="string">
+                            <annotation>
+                                <documentation>Фактическая СМО (ТФОМС как СМО)</documentation>
+                            </annotation>
+                        </element>
+                        <element name="insurCode" type="string">
+                            <annotation>
+                                <documentation>Код СМО</documentation>
+                            </annotation>
+                        </element>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <element name="changeAllPoliciesInsuranceToTfomsStartResponse">
+            <annotation>
+                <documentation>Синхронный ответ, на запрос процесса назначения действующим полисам, привязанным на заданной территории к заданной СМО, ТФОМС данной территории в качестве СМО
+                </documentation>
+            </annotation>
+            <complexType>
+                <complexContent>
+                    <extension base="commonTypes:AsyncStartResponse"/>
+                </complexContent>
+            </complexType>
+        </element>
+
+    <element name="changeAllPoliciesInsuranceToTfomsPollRequest">
+        <annotation>
+            <documentation>Запрос для получения результата по назначениям действующим полисам, привязанным на заданной территории к заданной СМО, ТФОМС данной территории в качестве СМО</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncPollRequest"/>
+            </complexContent>
+        </complexType>
+    </element>
+
+
+    <element name="changeAllPoliciesInsuranceToTfomsPollResponse">
+        <annotation>
+            <documentation>Выдает перечень успешно назначенных ЕНП и ЕНП с ошибками</documentation>
+        </annotation>
+        <complexType>
+            <complexContent>
+                <extension base="commonTypes:AsyncPollResponse">
+                    <sequence>
+                        <element minOccurs="0" name="сhangeResult" type="tns:ListOfChangeResult">
+                            <annotation>
+                                <documentation>Раздел, содержащий результат запроса: ЕНП, код результата, ошибки (если они возникли) </documentation>
+                            </annotation>
+                        </element>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+
+    <complexType name="ListOfChangeResult">
+        <sequence>
+            <element maxOccurs="unbounded" name="result" type="tns:ChangeResultResponse"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="ChangeResultResponse">
+        <annotation>
+            <documentation>код результата (http) и расшифровка ошибки</documentation>
+        </annotation>
+        <sequence>
+            <element name="enp" type="string">
+                <annotation>
+                    <documentation>ЕНП</documentation>
+                </annotation>
+            </element>
+            <element name="codeResult" type="string">
+                <annotation>
+                    <documentation>Код результата(200 - успех, 409.xx.x - код ошибки бизнес-логики )</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="Criteria">
+        <annotation>
+            <documentation>
+                Список критериев, которые задаются для формирования данных о прикреплениях в разных разрезах
+            </documentation>
+        </annotation>
+        <sequence>
+            <element name="fieldNameAttached">
+                <annotation><documentation>Имя поля в витрине, по которому необходимо осуществить отбор. Доступны следующие значения:
+                    smo_okato
+                    mo_okato
+                    mo_code
+                    smo</documentation>
+                </annotation>
+                <simpleType>
+                    <restriction base="string">
+                        <enumeration value="smo_okato"/>
+                        <enumeration value="mo_okato"/>
+                        <enumeration value="mo_code"/>
+                        <enumeration value="smo"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element name="logicOperation">
+                <annotation><documentation>Логическая операция, которую необходимо использовать при отборе данных по параметру:
+                    0 - равно
+                    1 - не равно</documentation></annotation>
+                <simpleType>
+                    <restriction base="int">
+                        <enumeration value="0"/>
+                        <enumeration value="1"/>
+                    </restriction>
+                </simpleType>
+            </element>
+            <element name="value" type="string">
+                <annotation>
+                    <documentation>Значение поля в витрине, которое нужно включить в выборку</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+</schema>

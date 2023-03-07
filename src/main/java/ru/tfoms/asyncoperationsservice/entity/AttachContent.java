@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "MPI_GET_VIEW_DATA_ATTACH_RES", schema = "OMCOWNER")
 @IdClass(CompositeKey.class)
-public class Content {
+public class AttachContent {
 	@Id
 	@Column(name = "RID")
 	private Long rid;

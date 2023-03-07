@@ -3,20 +3,15 @@ package ru.tfoms.asyncoperationsservice.service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.transform.TransformerException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.WebServiceMessage;
@@ -26,54 +21,47 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.springframework.ws.support.MarshallingUtils;
 
-import ru.tfoms.asyncoperationsservice.entity.AttachPoll;
-import ru.tfoms.asyncoperationsservice.entity.AttachContent;
+import ru.tfoms.asyncoperationsservice.entity.InsurancePoll;
 import ru.tfoms.asyncoperationsservice.entity.MPIError;
 import ru.tfoms.asyncoperationsservice.entity.MPIReq;
-import ru.tfoms.asyncoperationsservice.repository.AttachPollRepository;
-import ru.tfoms.asyncoperationsservice.repository.AttachContentRepository;
+import ru.tfoms.asyncoperationsservice.repository.InsurancePollRepository;
 import ru.tfoms.asyncoperationsservice.repository.MPIErrorRepository;
 import ru.tfoms.asyncoperationsservice.repository.MPIReqRepository;
-import ru.tfoms.schemas.generated.GetViewDataAttachPollRequest;
-import ru.tfoms.schemas.generated.GetViewDataAttachPollResponse;
+import ru.tfoms.asyncoperationsservice.service.AsyncOperationsService.Status;
+import ru.tfoms.schemas.generated.GetViewDataInsurancePollRequest;
+import ru.tfoms.schemas.generated.GetViewDataInsurancePollResponse;
 import ru.tfoms.schemas.generated.ResponseErrorData;
 
 @Service
-public class GetViewDataAttachPoll extends AsyncOperationsService {
-	private final AttachPollRepository attachPollRepository;
+public class GetViewDataInsurancePoll extends AsyncOperationsService {
+	private final InsurancePollRepository insurancePollRepository;
 	private final MPIErrorRepository mpiErrorRepository;
 	private final MPIReqRepository mpiReqRepository;
-	private final AttachContentRepository contentRepository;
+//	private final InsuranceContentRepository contentRepository;
 	private final WebServiceTemplate template;
-
-	@Autowired
-	public GetViewDataAttachPoll(AttachPollRepository attachPollRepository, WebServiceTemplate template,
-			MPIErrorRepository mpiErrorRepository, MPIReqRepository mpiReqRepository,
-			AttachContentRepository contentRepository) {
-		this.attachPollRepository = attachPollRepository;
+	
+	public GetViewDataInsurancePoll(InsurancePollRepository insurancePollRepository, MPIReqRepository mpiReqRepository, MPIErrorRepository mpiErrorRepository, WebServiceTemplate template) {
+		this.insurancePollRepository = insurancePollRepository;
 		this.mpiErrorRepository = mpiErrorRepository;
 		this.mpiReqRepository = mpiReqRepository;
-		this.contentRepository = contentRepository;
 		this.template = template;
 	}
-
+	
 	@Override
-	@Scheduled(cron = "0 0/15 8-23 * * *")
-//	@Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
+//	@Scheduled(cron = "0 0/15 8-23 * * *")
+	@Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
 	public void process() {
-		Collection<AttachPoll> requests = attachPollRepository.findByStatusIsNullOrStatusNotIn(ignoredStatuses);
-		Marshaller marshaller = template.getMarshaller();
-		Unmarshaller unmarshaller = template.getUnmarshaller();
+		Collection<InsurancePoll> requests = insurancePollRepository.findByStatusIsNullOrStatusNotIn(ignoredStatuses);
 		requests.forEach(t -> {
-			GetViewDataAttachPollRequest request = getViewDataAttachPollRequest(t);
+			GetViewDataInsurancePollRequest request = getViewDataInsurancePollRequest(t);
 			try {
-				GetViewDataAttachPollResponse response = (GetViewDataAttachPollResponse) template
+				GetViewDataInsurancePollResponse response = (GetViewDataInsurancePollResponse) template
 						.sendAndReceive(new WebServiceMessageCallback() {
 
 							@Override
 							public void doWithMessage(WebServiceMessage message)
 									throws IOException, TransformerException {
-								MarshallingUtils.marshal(marshaller, request, message);
+								MarshallingUtils.marshal(template.getMarshaller(), request, message);
 
 								ByteArrayOutputStream out = new ByteArrayOutputStream();
 								message.writeTo(out);
@@ -85,10 +73,10 @@ public class GetViewDataAttachPoll extends AsyncOperationsService {
 
 								mpiReqRepository.save(mpiReq);
 							}
-						}, new WebServiceMessageExtractor<GetViewDataAttachPollResponse>() {
+						}, new WebServiceMessageExtractor<GetViewDataInsurancePollResponse>() {
 
 							@Override
-							public GetViewDataAttachPollResponse extractData(WebServiceMessage message)
+							public GetViewDataInsurancePollResponse extractData(WebServiceMessage message)
 									throws IOException, TransformerException {
 								ByteArrayOutputStream out = new ByteArrayOutputStream();
 								message.writeTo(out);
@@ -97,7 +85,7 @@ public class GetViewDataAttachPoll extends AsyncOperationsService {
 
 								mpiReqRepository.save(mpiReq);
 
-								return (GetViewDataAttachPollResponse) MarshallingUtils.unmarshal(unmarshaller,
+								return (GetViewDataInsurancePollResponse) MarshallingUtils.unmarshal(template.getUnmarshaller(),
 										message);
 							}
 						});
@@ -108,7 +96,7 @@ public class GetViewDataAttachPoll extends AsyncOperationsService {
 				t.setDtreq(LocalDateTime.now());
 				t.setHasError(true);
 
-				attachPollRepository.save(t);
+				insurancePollRepository.save(t);
 
 				MPIError errEntity = new MPIError();
 				errEntity.setRid(t.getRid());
@@ -124,7 +112,7 @@ public class GetViewDataAttachPoll extends AsyncOperationsService {
 		});
 	}
 
-	private void save(AttachPoll t, GetViewDataAttachPollResponse response) {
+	private void save(InsurancePoll t, GetViewDataInsurancePollResponse response) {
 		if (response.getErrors() != null && response.getErrors().getErrorItem().size() == 1 && response.getErrors()
 				.getErrorItem().stream().findAny().get().getCode().trim().equals(INTERNAL_SERVICE_ERROR)) {
 			// do nothing
@@ -134,9 +122,9 @@ public class GetViewDataAttachPoll extends AsyncOperationsService {
 			t.setStatus(response.getProcessingStatus());
 			t.setExtrid(response.getExternalRequestId());
 
-			attachPollRepository.save(t);
+			insurancePollRepository.save(t);
 		}
-
+		
 		if (response.getErrors() != null) {
 			Collection<ResponseErrorData> errors = response.getErrors().getErrorItem();
 			int nr = 0;
@@ -166,52 +154,28 @@ public class GetViewDataAttachPoll extends AsyncOperationsService {
 				e.printStackTrace();
 			}
 		}
-
+		
 	}
 
-	private GetViewDataAttachPollRequest getViewDataAttachPollRequest(AttachPoll t) {
-		GetViewDataAttachPollRequest request = new GetViewDataAttachPollRequest();
-		request.setExternalRequestId(UUID.randomUUID().toString());
-		request.setOpToken(t.getOpToken());
-
-		return request;
-	}
-
-	private void saveContent(byte[] data, Long rid) throws IOException {
-		ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(data));
+	private void saveContent(byte[] byteArray, Long rid) throws IOException {
+		ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(byteArray));
 		zis.getNextEntry();
 		Scanner sc = new Scanner(zis);
 		int nr = 0;
 		while (sc.hasNextLine()) {
-			String[] record = sc.nextLine().split(",");
-			AttachContent content = new AttachContent();
-			content.setRid(rid);
-			content.setNr(++nr);
-			content.setDt(YearMonth.parse(record[0], DateTimeFormatter.ofPattern("MM.yyyy")).atDay(1));
-			content.setPersonEnp(record[1]);
-			content.setSmoId(record[2]);
-			content.setSmoName(record[3]);
-			content.setSmoOkatoId(record[4]);
-			content.setPersonGender(record[5].isEmpty() ? null : Integer.valueOf(record[5]));
-			content.setPersonAge(record[6]);
-			content.setMoCode(record[7]);
-			content.setMoId(record[8]);
-			content.setMoName(record[9]);
-			content.setMoOkato(record[10]);
-			content.setFmoId(record[11]);
-			content.setAttachType(record[12].isEmpty() ? null : Integer.valueOf(record[12]));// убрать не нулл
-			content.setAttachDepartType(record[13].isEmpty() ? null : Integer.valueOf(record[13]));
-			content.setAttachMethod(record[14].isEmpty() ? null : Integer.valueOf(record[14]));
-			content.setAttachEffDate(record[15].isEmpty() ? null : LocalDate.parse(record[15], DATE_TIME_FORMATTER));
-			content.setAttachExpDate(record[16].isEmpty() ? null : LocalDate.parse(record[16], DATE_TIME_FORMATTER));
-			content.setDoctorId(record[17]);
-			content.setDoctorSnils(record[18]);
-			content.setDoctorEffDate(record[19].isEmpty() ? null : LocalDate.parse(record[19], DATE_TIME_FORMATTER));
-			content.setAttachStatus(record[20]);
-			contentRepository.save(content);
+			System.out.println(sc.nextLine());
 		}
 		sc.close();
 		zis.closeEntry();
 		zis.close();
 	}
+
+	private GetViewDataInsurancePollRequest getViewDataInsurancePollRequest(InsurancePoll t) {
+		GetViewDataInsurancePollRequest request = new GetViewDataInsurancePollRequest();
+		request.setExternalRequestId(UUID.randomUUID().toString());
+		request.setOpToken(t.getOpToken());
+		
+		return request;
+	}
+
 }

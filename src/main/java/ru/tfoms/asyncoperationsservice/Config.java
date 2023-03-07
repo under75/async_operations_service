@@ -35,6 +35,7 @@ public class Config extends WsConfigurerAdapter {
 		// this is the package name specified in the <generatePackage> specified in
 		// pom.xml
 		marshaller.setContextPath("ru.tfoms.schemas.generated");
+		marshaller.setMtomEnabled(true);
 
 		return marshaller;
 	}

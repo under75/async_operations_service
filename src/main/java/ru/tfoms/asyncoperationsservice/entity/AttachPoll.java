@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -41,10 +40,6 @@ public class AttachPoll {
 	@Column(name = "extrid")
 	private String extrid;
 	
-	@Lob
-	@Column(name = "content")
-	private byte[] content;
-
 	public Long getRid() {
 		return rid;
 	}
@@ -108,13 +103,4 @@ public class AttachPoll {
 	public void setExtrid(String extrid) {
 		this.extrid = extrid;
 	}
-
-	public byte[] getContent() {
-		return content;
-	}
-
-	public void setContent(byte[] content) {
-		this.content = content;
-	}
-	
 }

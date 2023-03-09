@@ -3,6 +3,7 @@ package ru.tfoms.asyncoperationsservice.service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -26,12 +27,15 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.springframework.ws.support.MarshallingUtils;
 
-import ru.tfoms.asyncoperationsservice.entity.AttachPoll;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+
 import ru.tfoms.asyncoperationsservice.entity.AttachContent;
+import ru.tfoms.asyncoperationsservice.entity.AttachPoll;
 import ru.tfoms.asyncoperationsservice.entity.MPIError;
 import ru.tfoms.asyncoperationsservice.entity.MPIReq;
-import ru.tfoms.asyncoperationsservice.repository.AttachPollRepository;
 import ru.tfoms.asyncoperationsservice.repository.AttachContentRepository;
+import ru.tfoms.asyncoperationsservice.repository.AttachPollRepository;
 import ru.tfoms.asyncoperationsservice.repository.MPIErrorRepository;
 import ru.tfoms.asyncoperationsservice.repository.MPIReqRepository;
 import ru.tfoms.schemas.generated.GetViewDataAttachPollRequest;
@@ -164,6 +168,8 @@ public class GetViewDataAttachPoll extends AsyncOperationsService {
 				os.close();
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (CsvValidationException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -177,14 +183,18 @@ public class GetViewDataAttachPoll extends AsyncOperationsService {
 		return request;
 	}
 
-	private void saveContent(byte[] data, Long rid) throws IOException {
+	private void saveContent(byte[] data, Long rid) throws IOException, CsvValidationException {
 		ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(data));
 		zis.getNextEntry();
 		Scanner sc = new Scanner(zis);
+		CSVReader reader;
+		AttachContent content;
+		String[] record;
 		int nr = 0;
 		while (sc.hasNextLine()) {
-			String[] record = sc.nextLine().split(",");
-			AttachContent content = new AttachContent();
+			reader = new CSVReader(new StringReader(sc.nextLine()));
+			record = reader.readNext();
+			content = new AttachContent();
 			content.setRid(rid);
 			content.setNr(++nr);
 			content.setDt(YearMonth.parse(record[0], DateTimeFormatter.ofPattern("MM.yyyy")).atDay(1));
@@ -199,7 +209,7 @@ public class GetViewDataAttachPoll extends AsyncOperationsService {
 			content.setMoName(record[9]);
 			content.setMoOkato(record[10]);
 			content.setFmoId(record[11]);
-			content.setAttachType(record[12].isEmpty() ? null : Integer.valueOf(record[12]));// убрать не нулл
+			content.setAttachType(record[12].isEmpty() ? null : Integer.valueOf(record[12]));
 			content.setAttachDepartType(record[13].isEmpty() ? null : Integer.valueOf(record[13]));
 			content.setAttachMethod(record[14].isEmpty() ? null : Integer.valueOf(record[14]));
 			content.setAttachEffDate(record[15].isEmpty() ? null : LocalDate.parse(record[15], DATE_TIME_FORMATTER));
@@ -208,6 +218,7 @@ public class GetViewDataAttachPoll extends AsyncOperationsService {
 			content.setDoctorSnils(record[18]);
 			content.setDoctorEffDate(record[19].isEmpty() ? null : LocalDate.parse(record[19], DATE_TIME_FORMATTER));
 			content.setAttachStatus(record[20]);
+			
 			contentRepository.save(content);
 		}
 		sc.close();

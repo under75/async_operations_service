@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Scanner;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.transform.TransformerException;
@@ -59,8 +58,8 @@ public class GetViewDataInsurancePoll extends AsyncOperationsService {
 	}
 
 	@Override
-//	@Scheduled(cron = "0 0/15 8-23 * * *")
-	@Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
+	@Scheduled(cron = "0 0/15 8-23 * * *")
+//	@Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
 	public void process() {
 		Collection<InsurancePoll> requests = insurancePollRepository.findByStatusIsNullOrStatusNotIn(ignoredStatuses);
 		requests.forEach(t -> {

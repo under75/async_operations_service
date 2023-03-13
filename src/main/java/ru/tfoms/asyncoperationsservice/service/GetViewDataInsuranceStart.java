@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -50,8 +49,8 @@ public class GetViewDataInsuranceStart extends AsyncOperationsService {
 	}
 
 	@Override
-//	@Scheduled(cron = "0 0/15 8-23 * * *")
-	@Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
+	@Scheduled(cron = "0 0/15 8-23 * * *")
+//	@Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
 	public void process() {
 		Collection<InsuranceStart> insuranceStarts = insuranceStartRepository.findByDtreqIsNull();
 		insuranceStarts.forEach(t -> {
